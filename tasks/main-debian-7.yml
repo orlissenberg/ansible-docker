@@ -1,0 +1,21 @@
+---
+# https://docs.docker.com/installation/debian/#debian-wheezystable-7x-64-bit
+
+- apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main' state=present
+
+# - apt: update_cache=yes
+
+- name: install Linux-image-amd64
+  apt: name=linux-image-amd64 update_cache=yes default_release=wheezy-backports state=latest
+
+- apt: name=curl state=latest
+
+- shell: curl -sSL https://get.docker.com/ | sh
+  args:
+    creates: /usr/bin/docker
+
+- shell: docker --version
+  register: docker_version
+  changed_when: False
+
+- debug: var=docker_version.stdout
