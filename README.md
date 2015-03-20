@@ -1,29 +1,24 @@
-Role Name
-=========
+#Ansible Docker Role
 
-Docker
+##Requirements
 
-Requirements
-------------
+  - Debian 7
 
+##Dependencies
 
-Role Variables
---------------
+None.
 
+##Example Playbook
 
-Dependencies
-------------
+    ---
+    - hosts: webservers
+      gather_facts: yes
+      sudo: yes
+      
+      roles:
+        - docker
 
-
-Example Playbook
-----------------
-
-
-License
--------
+##License
 
 MIT
-
-Author Information
-------------------
 
