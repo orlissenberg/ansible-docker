@@ -13,9 +13,3 @@
 - shell: curl -sSL https://get.docker.com/ | sh
   args:
     creates: /usr/bin/docker
-
-- shell: docker --version
-  register: docker_version
-  changed_when: False
-
-- debug: var=docker_version.stdout

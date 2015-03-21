@@ -4,22 +4,23 @@ CID=$(sudo docker run -d -i orlissenberg/ansible-sshd-wheezy);
 IPADDRESS=$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID});
 
 # Create a hosts file.
-echo "[webservers]" > hosts
+printf "[webservers]\n" > hosts
 
 # Install on localhost.
 #echo "localhost ansible_connection=local" >> hosts
 
 # Requires sshpass.
-sudo apt-get install -y sshpass
-echo "${IPADDRESS} ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=root" >> hosts
+# sudo apt-get install -y sshpass
+# sudo yum install -y sshpass
+printf "${IPADDRESS} ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=root\n" >> hosts
 
 # Need this because I'm running on Windows ...
 cp hosts /tmp/hosts
 chmod 0644 /tmp/hosts
 
 # Create an ansible configuration file in the local directory.
-echo "[defaults]\nroles_path = ../" > ansible.cfg
-echo "host_key_checking = False" >> ansible.cfg
+printf "[defaults]\nroles_path = ../\n" > ansible.cfg
+printf "host_key_checking = False\n" >> ansible.cfg
 
 # Should show changes.
 ansible-playbook playbook.yml -i /tmp/hosts
@@ -28,13 +29,11 @@ ansible-playbook playbook.yml -i /tmp/hosts
 ansible-playbook playbook.yml -i /tmp/hosts
 
 # Clean up.
-rm hosts
-rm /tmp/hosts
-rm ansible.cfg
+rm hosts; rm /tmp/hosts; rm ansible.cfg
 
 # Might need these commands for science!
-echo "sudo docker kill ${CID}"
-echo "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@$IPADDRESS"
+printf "sudo docker kill ${CID}\n"
+printf "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@$IPADDRESS\n"
 
 # No longer need the container.
 sudo docker kill ${CID}

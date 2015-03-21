@@ -1,0 +1,14 @@
+---
+# tasks file for docker
+
+- yum: name={{ item }} state=latest
+  with_items:
+    - docker-io
+
+- service: name=docker state=started enabled=yes
+
+- template: src=docker.j2 dest=/etc/default/docker owner=root group=root mode=0640
+  notify: restart-docker
+
+- name: start docker
+  service: name=docker state=running enabled=true
