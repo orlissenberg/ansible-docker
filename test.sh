@@ -1,6 +1,7 @@
 #!/bin/sh
 
-CID=$(sudo docker run -d -i orlissenberg/ansible-sshd-wheezy);
+CID=$(sudo docker run -d -i orlissenberg/docker-sshd-wheezy);
+#CID=$(sudo docker run -d -i orlissenberg/docker-sshd-centos6);
 IPADDRESS=$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID});
 
 # Create a hosts file.
@@ -23,10 +24,10 @@ printf "[defaults]\nroles_path = ../\n" > ansible.cfg
 printf "host_key_checking = False\n" >> ansible.cfg
 
 # Should show changes.
-ansible-playbook playbook.yml -i /tmp/hosts
+ansible-playbook playbook.yml -i /tmp/hosts --extra-vars="docker_test=true"
 
 # Check if idempotent.
-ansible-playbook playbook.yml -i /tmp/hosts
+ansible-playbook playbook.yml -i /tmp/hosts --extra-vars="docker_test=true"
 
 # Clean up.
 rm hosts; rm /tmp/hosts; rm ansible.cfg
@@ -44,5 +45,3 @@ sudo docker rm ${CID}
 # https://servercheck.in/blog/testing-ansible-roles-travis-ci-github
 # https://docs.docker.com/articles/using_supervisord/
 # https://docs.ansible.com/playbooks_error_handling.html
-
-

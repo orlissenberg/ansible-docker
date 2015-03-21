@@ -5,6 +5,9 @@
 - include: main-debian-7.yml
   when: ansible_distribution == 'Debian' and ansible_distribution_major_version == '7'
 
+# Remark, the following error occurs when testing on a CentOS6 Docker container.
+# "/var/run/docker.pid still exists..."
+# "docker_version.stdout": "Docker version 1.4.1, build 5bc2ff8/1.4.1"
 - include: main-centos-6.yml
   when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '6'
 

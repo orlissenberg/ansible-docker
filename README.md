@@ -17,11 +17,10 @@ None.
     - hosts: webservers
       gather_facts: yes
       sudo: yes
-      
+
       roles:
         - docker
 
 ##License
 
 MIT
-

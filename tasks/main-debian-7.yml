@@ -13,3 +13,6 @@
 - shell: curl -sSL https://get.docker.com/ | sh
   args:
     creates: /usr/bin/docker
+
+- service: name=docker state=started enabled=yes
+  when: not docker_test
