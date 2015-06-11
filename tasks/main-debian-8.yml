@@ -1,0 +1,17 @@
+---
+
+- apt_repository: repo='deb http://http.debian.net/debian jessie-backports main' state=present
+
+# - apt: update_cache=yes
+
+- name: install Linux-image-amd64
+  apt: name=linux-image-amd64 update_cache=yes default_release=jessie-backports state=latest
+
+- apt: name=curl state=latest
+
+- shell: curl -sSL https://get.docker.com/ | sh
+  args:
+    creates: /usr/bin/docker
+
+- service: name=docker state=started enabled=yes
+  when: not docker_test

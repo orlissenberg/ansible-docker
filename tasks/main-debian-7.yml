@@ -1,5 +1,4 @@
 ---
-# https://docs.docker.com/installation/debian/#debian-wheezystable-7x-64-bit
 
 - apt_repository: repo='deb http://http.debian.net/debian wheezy-backports main' state=present
 
@@ -16,3 +15,5 @@
 
 - service: name=docker state=started enabled=yes
   when: not docker_test
+
+# https://docs.docker.com/installation/debian/#debian-wheezystable-7x-64-bit
