@@ -21,6 +21,10 @@ None.
       roles:
         - docker
 
+##Notes
+
+[http://www.boronine.com/2013/12/30/Installing-Docker-on-Debian-Jessie/](Installing Docker on Debian Jessie)
+
 ##License
 
 MIT

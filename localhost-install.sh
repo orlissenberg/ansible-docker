@@ -25,14 +25,6 @@ EOF
 
 export ANSIBLE_CONFIG=$TMP_DIR/ansible.cfg
 
-# Syntax check
-ansible-playbook playbook.yml -i $TMP_DIR/hosts --syntax-check
-
-# First run
+# Run
 ansible-playbook playbook.yml -i $TMP_DIR/hosts
-
-# Idempotence test
-ansible-playbook playbook.yml -i $TMP_DIR/hosts | grep -q 'changed=0.*failed=0' \
-	&& (echo 'Idempotence test: pass' \
-	&& exit 0) || (echo 'Idempotence test: fail' && exit 1) \
 
