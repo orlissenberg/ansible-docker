@@ -1,17 +1,21 @@
 ---
 
-- apt_repository: repo='deb http://http.debian.net/debian jessie-backports main' state=present
+# https://docs.docker.com/engine/installation/debian/
 
-# - apt: update_cache=yes
+- apt: name={{ item }} state=latest
+  with_items:
+    - aufs-tools
+    - lxc
+    - apt-transport-https
 
-- name: install Linux-image-amd64
-  apt: name=linux-image-amd64 update_cache=yes default_release=jessie-backports state=latest
+- apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
 
-- apt: name=curl state=latest
+- apt_repository: repo='deb https://apt.dockerproject.org/repo debian-jessie main' state=present update_cache=yes
 
-- shell: curl -sSL https://get.docker.com/ | sh
-  args:
-    creates: /usr/bin/docker
+- shell: apt-get purge lxc-docker*
+
+- shell: apt-get purge docker.io*
+
+- apt: name=docker-engine state=latest
 
 - service: name=docker state=started enabled=yes
-  when: not docker_test
