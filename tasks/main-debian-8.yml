@@ -1,21 +1,28 @@
 ---
 
-# https://docs.docker.com/engine/installation/debian/
+# https://docs.docker.com/engine/installation/linux/docker-ce/debian/
 
 - apt: name={{ item }} state=latest
   with_items:
     - aufs-tools
     - lxc
     - apt-transport-https
+    - ca-certificates
 
-- apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
+- apt_key: url=https://download.docker.com/linux/debian/gpg state=present
 
-- apt_repository: repo='deb https://apt.dockerproject.org/repo debian-jessie main' state=present update_cache=yes
+- apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/debian jessie stable' state=present update_cache=yes
 
+# Ignore the warning: "﻿[WARNING]: Consider using apt module rather than running apt-get", apt module will not purge
+# if the package does not exist, now it will just run without failure.
 - shell: apt-get purge lxc-docker*
 
 - shell: apt-get purge docker.io*
 
-- apt: name=docker-engine state=latest
+- apt: name=docker-ce state=latest
 
 - service: name=docker state=started enabled=yes
+
+# Test: sudo docker run hello-world
+
+- pip: name=docker-compose

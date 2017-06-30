@@ -1,47 +1,44 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-#CID=$(sudo docker run -d -i orlissenberg/docker-sshd-wheezy);
-#CID=$(sudo docker run -d -i orlissenberg/docker-sshd-centos6);
-#IPADDRESS=$(sudo docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${CID});
+CURRENT_DIR=${PWD}
+TMP_DIR=/tmp/ansible-test
+mkdir -p $TMP_DIR 2> /dev/null
 
-# Create a hosts file.
-printf "[webservers]\n" > hosts
+# Create hosts inventory
+cat << EOF > $TMP_DIR/hosts
+[webservers]
+localhost ansible_connection=local
+EOF
 
-# Install on localhost.
-echo "localhost ansible_connection=local" >> hosts
+# Create group_vars for the webservers
+mkdir -p $TMP_DIR/group_vars 2> /dev/null
+cat << EOF > $TMP_DIR/group_vars/webservers
+#docker_test: false
+EOF
 
-# Requires sshpass.
-# sudo apt-get install -y sshpass
-# sudo yum install -y sshpass
-# printf "${IPADDRESS} ansible_connection=ssh ansible_ssh_user=root ansible_ssh_pass=root\n" >> hosts
+# Create Ansible config
+cat << EOF > $TMP_DIR/ansible.cfg
+[defaults]
+roles_path = $CURRENT_DIR/../
+host_key_checking = false
+EOF
 
-# Need this because I'm running on Windows ...
-cp hosts /tmp/hosts
-chmod 0644 /tmp/hosts
+# Create playbook.yml
+cat << EOF > $TMP_DIR/playbook.yml
+---
 
-# Create an ansible configuration file in the local directory.
-printf "[defaults]\nroles_path = ../\n" > ansible.cfg
-printf "host_key_checking = False\n" >> ansible.cfg
+- hosts: webservers
+  gather_facts: yes
+  become: yes
 
-# Should show changes.
-ansible-playbook playbook.yml -i /tmp/hosts --extra-vars="docker_test=true"
+  roles:
+    - ansible-docker
+EOF
 
-# Check if idempotent.
-#ansible-playbook playbook.yml -i /tmp/hosts --extra-vars="docker_test=true"
+export ANSIBLE_CONFIG=$TMP_DIR/ansible.cfg
 
-# Clean up.
-rm hosts; rm /tmp/hosts; rm ansible.cfg
+# Syntax check
+ansible-playbook $TMP_DIR/playbook.yml -i $TMP_DIR/hosts --syntax-check
 
-# Might need these commands for science!
-#printf "sudo docker kill ${CID}\n"
-#printf "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@$IPADDRESS\n"
-
-# No longer need the container.
-#sudo docker kill ${CID}
-#sudo docker rm ${CID}
-
-# References:
-# http://stackoverflow.com/questions/17157721/getting-a-docker-containers-ip-address-from-the-host
-# https://servercheck.in/blog/testing-ansible-roles-travis-ci-github
-# https://docs.docker.com/articles/using_supervisord/
-# https://docs.ansible.com/playbooks_error_handling.html
+# First run
+ansible-playbook $TMP_DIR/playbook.yml -i $TMP_DIR/hosts --extra-vars="docker_test=true"

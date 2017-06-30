@@ -4,7 +4,7 @@
 
 See also the test.sh which tests this role by using Docker!
 
-  - Debian 7
+  - Debian 8
   - CentOS 6
 
 ##Dependencies
@@ -16,7 +16,7 @@ None.
     ---
     - hosts: webservers
       gather_facts: yes
-      sudo: yes
+      become: yes
 
       roles:
         - docker
