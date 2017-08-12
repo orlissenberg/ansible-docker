@@ -21,7 +21,7 @@
 
 - apt: name=docker-ce state=latest
 
-- service: name=docker state=started enabled=yes
+# - service: name=docker state=started enabled=yes
 
 # Test: sudo docker run hello-world
 
