@@ -2,27 +2,42 @@
 
 # https://docs.docker.com/engine/installation/linux/docker-ce/debian/
 
-- apt: name={{ item }} state=latest
+- name: Install dependencies
+  apt: name={{ item }} state=latest
   with_items:
     - aufs-tools
     - lxc
     - apt-transport-https
     - ca-certificates
 
-- apt_key: url=https://download.docker.com/linux/debian/gpg state=present
+- name: Install docker GPG key
+  apt_key: url=https://download.docker.com/linux/debian/gpg state=present
 
-- apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/debian jessie stable' state=present update_cache=yes
+- name: Install docker repository
+  apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/debian jessie stable' state=present update_cache=yes
 
 # Ignore the warning: "﻿[WARNING]: Consider using apt module rather than running apt-get", apt module will not purge
 # if the package does not exist, now it will just run without failure.
-- shell: apt-get purge lxc-docker*
+- name: Purge old docker versions
+  shell: apt-get purge lxc-docker*
 
-- shell: apt-get purge docker.io*
+- name: Purge old Docker versions
+  shell: apt-get purge docker.io*
 
-- apt: name=docker-ce state=latest
+- name: Install Docker CE
+  apt: name=docker-ce state=latest
+
+- name: Install docker service configuration
+  template:
+    src: docker.service.j2
+    dest: ﻿/lib/systemd/system/docker.service
+    owner: root
+    group: root
+    mode: "u=rw,g=r,o=r"
 
 # - service: name=docker state=started enabled=yes
 
 # Test: sudo docker run hello-world
 
-- pip: name=docker-compose
+- name: Install Docker Compose
+  pip: name=docker-compose

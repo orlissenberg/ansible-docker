@@ -1,7 +1,8 @@
 ---
 # tasks file for docker
 
-- apt: name={{ item }} state=latest
+- name: Install pip
+  apt: name={{ item }} state=latest
   with_items:
     - python-pip
 

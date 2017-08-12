@@ -5,7 +5,8 @@
 See also the test.sh which tests this role by using Docker!
 
   - Debian 8
-  - CentOS 6
+
+Note that "--iptables=false" has been set in the configuration! See [this](https://fralef.me/docker-and-iptables.html).
 
 ##Dependencies
 
