@@ -9,6 +9,7 @@
     - lxc
     - apt-transport-https
     - ca-certificates
+    - network-manager
 
 - name: Install docker GPG key
   apt_key: url=https://download.docker.com/linux/debian/gpg state=present
