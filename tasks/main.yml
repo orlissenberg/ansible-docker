@@ -2,9 +2,14 @@
 # tasks file for docker
 
 - name: Install pip
-  apt: name={{ item }} state=latest
+  apt: name={{ item }} state=absent
   with_items:
     - python-pip
+
+# How do I fix 'ImportError: cannot import name IncompleteRead'?
+# https://stackoverflow.com/questions/27341064/how-do-i-fix-importerror-cannot-import-name-incompleteread
+- name: Install pip via easy install
+  shell: easy_install pip
 
 - include: main-debian-8.yml
   when: ansible_distribution == 'Debian' and ansible_distribution_major_version == '8'

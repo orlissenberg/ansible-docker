@@ -29,16 +29,11 @@
   apt: name=docker-ce state=latest
 
 - name: Install docker service configuration
-  template:
-    src: docker.service.j2
-    dest: ﻿/lib/systemd/system/docker.service
-    owner: root
-    group: root
-    mode: "u=rw,g=r,o=r"
+  template: src=docker.service.j2 dest=/lib/systemd/system/docker.service owner=root group=root mode="u=rw,g=r,o=r"
 
 # - service: name=docker state=started enabled=yes
 
 # Test: sudo docker run hello-world
 
 - name: Install Docker Compose
-  pip: name=docker-compose
+  pip: name="docker-compose"
