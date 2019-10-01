@@ -3,14 +3,15 @@
 # https://docs.docker.com/engine/installation/linux/docker-ce/debian/
 
 - name: Install dependencies
-  apt: name={{ item }} state=latest
-  with_items:
-    - aufs-tools
-    - lxc
-    - apt-transport-https
-    - ca-certificates
-    - network-manager
-
+  apt: 
+    name: 
+      - aufs-tools
+      - lxc
+      - apt-transport-https
+      - ca-certificates
+      - network-manager
+    state: latest
+    
 - name: Install docker GPG key
   apt_key: url=https://download.docker.com/linux/debian/gpg state=present
 

@@ -1,0 +1,47 @@
+---
+
+# https://docs.docker.com/engine/installation/linux/docker-ce/debian/
+
+- name: Install dependencies
+  apt:
+    name:
+      - aufs-tools
+      - lxc
+      - apt-transport-https
+      - ca-certificates
+      - network-manager
+      - curl
+      - gnupg2
+      - software-properties-common
+    state: latest
+    
+- name: Install Docker GPG key
+  apt_key: url=https://download.docker.com/linux/debian/gpg state=present
+
+- name: Install Docker repository
+  apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/debian stretch stable' state=present update_cache=yes
+
+# Ignore the warning: "[WARNING]: Consider using apt module rather than running apt-get", apt module will not purge
+# if the package does not exist, now it will just run without failure.
+# - name: Purge old Docker versions
+#   shell: apt-get purge lxc-docker*
+
+# - name: Purge old Docker versions
+#   shell: apt-get purge docker docker-engine docker.io containerd runc
+
+- name: Install Docker CE
+  apt: 
+    name: ['docker-ce','docker-ce-cli','containerd.io']
+    state: latest
+
+# - name: Install Docker service configuration
+#   template: src=docker.service.j2 dest=/lib/systemd/system/docker.service owner=root group=root mode="u=rw,g=r,o=r"
+
+# - service: name=docker state=started enabled=yes
+
+- name: Test Docker installation
+  become: true
+  shell: docker run --rm hello-world
+
+- name: Install Docker Compose
+  pip: name="docker-compose"

@@ -13,7 +13,7 @@ EOF
 # Create group_vars for the web servers
 mkdir -p ${TMP_DIR}/group_vars 2> /dev/null
 cat << EOF > ${TMP_DIR}/group_vars/webservers
-#docker_test: false
+docker_users: ['debian']
 EOF
 
 # Create Ansible config
